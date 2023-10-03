@@ -81,13 +81,14 @@ if button:
             st.table(predictiondt)
 
 tab1, tab2 = st.tabs(["Open Grafik", "Close Grafik"])
-if dt and rf and lr and knn:
-    with tab1:
-        
-        dataOpen = pd.DataFrame({'Decision Tree': predictiondt.get("Open"), 'Random Forest': predictionrf.get("Open"), 'Linier Regresion': predictionlr.get("Open"), 'KNN': predictionknn.get("Open") })
-        st.subheader("Grafik Open")
-        st.line_chart(dataOpen)
-    with tab2:
-        dataClose = pd.DataFrame({'Decision Tree': predictiondt.get("Close"), 'Random Forest': predictionrf.get("Close"), 'Linier Regresion': predictionlr.get("Close"), 'KNN': predictionknn.get("Close") })
-        st.subheader("Grafik Close")
-        st.line_chart(dataClose)
+if button:
+    if dt and rf and lr and knn:
+        with tab1:
+            
+            dataOpen = pd.DataFrame({'Decision Tree': predictiondt.get("Open"), 'Random Forest': predictionrf.get("Open"), 'Linier Regresion': predictionlr.get("Open"), 'KNN': predictionknn.get("Open") })
+            st.subheader("Grafik Open")
+            st.line_chart(dataOpen)
+        with tab2:
+            dataClose = pd.DataFrame({'Decision Tree': predictiondt.get("Close"), 'Random Forest': predictionrf.get("Close"), 'Linier Regresion': predictionlr.get("Close"), 'KNN': predictionknn.get("Close") })
+            st.subheader("Grafik Close")
+            st.line_chart(dataClose)
