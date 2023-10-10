@@ -54,8 +54,8 @@ hari = int(tanggal[0])
 bulan = int(tanggal[1])
 tahun = int('20'+tanggal[2])
 date = st.sidebar.date_input(
-    "Rentang tanggal Prediksi",
-    datetime.date(tahun, bulan, hari),
+    "Tanggal Akhir Prediksi",
+    datetime.date(tahun, bulan, hari)+ datetime.timedelta(days=1),
     min_value=datetime.date(tahun, bulan, hari)
 )
 date_def = datetime.date(tahun, bulan, hari)
@@ -71,25 +71,38 @@ if button:
             predictionknn = predict_KNN(x,y,features,day,tanggal)
             st.subheader("Tabel Hasil KNN")
             st.table(predictionknn)
+    else:
+        with tab1:
+            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma KNN silahkan beri tanda check algoritma KNN pada menu konfigurasi")
     if lr:
         with tab2:
             predictionlr = predict_LR(x,y,features,day,tanggal)
             st.subheader("Tabel Hasil Linier Regresion")
             st.table(predictionlr)
+    else:
+        with tab2:
+            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Linier Regresion silahkan beri tanda check algoritma Linier Regresion pada menu konfigurasi")
     if rf:
         with tab3:
             predictionrf = predict_RF(x,y,features,day,tanggal)
             st.subheader("Tabel Hasil Random Forest")
             st.table(predictionrf)
+    else:
+        with tab3:
+            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Random Forest silahkan beri tanda check algoritma Random Forest pada menu konfigurasi")
     if dt:
         with tab4:
             predictiondt = predict_DT(x,y,features,day,tanggal)
             st.subheader("Tabel Hasil Decision Tree")
             st.table(predictiondt)
+    else:
+        with tab4:
+            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Decision Tree silahkan beri tanda check pada menu konfigurasi")
 
 if button:
+    st.subheader("Grafik Pembukaan Harga")
+    st.caption("Untuk menampilkan grafik prediksi pembukaan harga silahkan beri tanda check pada algoritma KNN, Linier Regresion, Random Forest dan Decision Tree pada menu konfigurasi")
     if dt and rf and lr and knn:
-        st.subheader("Grafik Open")
         df['Date'] = pd.to_datetime(df.Date, format='%d/%m/%y').dt.strftime('%Y-%m-%d')
         df['Type'] = "Data Historis"
         predictiondt["Type"] = "Decision Tree"
@@ -131,7 +144,7 @@ if button:
 
 # File Upload
 st.header("File Upload")
-uploaded_file = st.file_uploader("Choose a CSV file name : dataset.csv")
+uploaded_file = st.file_uploader("Pilih file csv dengan format penamaan : dataset.csv")
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
     data = uploaded_file.getvalue().decode('utf-8').splitlines()         
@@ -139,11 +152,11 @@ if uploaded_file is not None:
     for i in range(0, min(5, len(data))):
         st.session_state["preview"] += data[i]
 preview = st.text_area("CSV Preview", "", height=150, key="preview")
-upload_state = st.text_area("Upload State", "", key="upload_state")
+upload_state = st.text_area("Pesan Upload", "", key="upload_state")
 
 def upload():
     if uploaded_file is None:
-        st.session_state["upload_state"] = "Upload a file first!"
+        st.session_state["upload_state"] = "Upload file terlebih dahulu"
     else:
         data = uploaded_file.getvalue().decode('utf-8')
         parent_path = pathlib.Path(__file__).parent.parent.resolve()           
@@ -152,5 +165,5 @@ def upload():
         destination_file = open(complete_name, "w")
         destination_file.write(data)
         destination_file.close()
-        st.session_state["upload_state"] = "Saved " + complete_name + " successfully!"
+        st.session_state["upload_state"] = "Penyimpanan " + complete_name + " berhasil!"
 st.button("Upload file", on_click=upload)
