@@ -26,7 +26,7 @@ def load_data():
     return df, x,y
 
 def train_model_DT(X,y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     # membuat model Decision Tree
 
     tree_model = DecisionTreeRegressor()
@@ -39,14 +39,17 @@ def train_model_DT(X,y):
     return tree_model
     
 
-def predict_DT(x,y,features,day):
+def predict_DT(x,y,features,day, tanggal):
     tree_model = train_model_DT(x,y)
+    hari = int(tanggal[0])
+    bulan = int(tanggal[1])
+    tahun = int('20'+tanggal[2])
 
     date = []
     opened = []
     closed = []
     for i in range(day):
-        date.append(datetime.date(2023, 8, 29) + datetime.timedelta(days=i))
+        date.append(datetime.date(tahun, bulan, hari) + datetime.timedelta(days=i+1))
         
         if i == 0:
             opened.append(features[0])
@@ -61,7 +64,7 @@ def predict_DT(x,y,features,day):
     
 def train_model_KNN(X, y):
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=5)
+        X, y, test_size=0.2, random_state=49)
     
     knn = KNeighborsRegressor(n_neighbors=2)
     
@@ -69,14 +72,18 @@ def train_model_KNN(X, y):
 
     return knn
 
-def predict_KNN(x, y, features,day):
+def predict_KNN(x, y, features,day, tanggal):
     knn = train_model_KNN(x, y)
+
+    hari = int(tanggal[0])
+    bulan = int(tanggal[1])
+    tahun = int('20'+tanggal[2])
 
     date = []
     opened = []
     closed = []
     for i in range(day):
-        date.append(datetime.date(2023, 8, 29) + datetime.timedelta(days=i))
+        date.append(datetime.date(tahun, bulan, hari) + datetime.timedelta(days=i+1))
         
         if i == 0:
             opened.append(features[0])
@@ -84,13 +91,13 @@ def predict_KNN(x, y, features,day):
             closed.append(knn.predict(np.array(features,dtype=np.float64).reshape(1,-1))[0])
         else:
             opened.append(closed[i-1])
-            closed.append(closed[i-1])
+            closed.append(knn.predict(np.array(closed[i-1],dtype=np.float64).reshape(1,-1))[0])
     predict = pd.DataFrame({'Date': date, 'Open': opened, 'Close':closed})
     
     return predict
 
 def train_model_LR(X,y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     # membuat model Decision Tree
     linier_model = LinearRegression()
 
@@ -101,13 +108,18 @@ def train_model_LR(X,y):
 
     return linier_model
 
-def predict_LR(x, y, features, day):
+def predict_LR(x, y, features, day, tanggal):
     lr = train_model_LR(x, y)
+
+    hari = int(tanggal[0])
+    bulan = int(tanggal[1])
+    tahun = int('20'+tanggal[2])
+
     date = []
     opened = []
     closed = []
     for i in range(day):
-        date.append(datetime.date(2023, 8, 29) + datetime.timedelta(days=i))
+        date.append(datetime.date(tahun, bulan, hari) + datetime.timedelta(days=i+1))
         
         if i == 0:
             opened.append(features[0])
@@ -119,7 +131,7 @@ def predict_LR(x, y, features, day):
     return predict
 
 def train_model_RF(X,y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     # membuat model Decision Tree
     rfr = RandomForestRegressor(n_estimators=100)
 
@@ -130,13 +142,18 @@ def train_model_RF(X,y):
 
     return rfr_model
 
-def predict_RF(x, y, features, day):
+def predict_RF(x, y, features, day, tanggal):
     rf = train_model_RF(x, y)
+
+    hari = int(tanggal[0])
+    bulan = int(tanggal[1])
+    tahun = int('20'+tanggal[2])
+
     date = []
     opened = []
     closed = []
     for i in range(day):
-        date.append(datetime.date(2023, 8, 29) + datetime.timedelta(days=i))
+        date.append(datetime.date(tahun, bulan, hari) + datetime.timedelta(days=i+1))
         
         if i == 0:
             opened.append(features[0])
