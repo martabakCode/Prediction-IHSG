@@ -91,7 +91,7 @@ if button:
     if dt and rf and lr and knn:
         st.subheader("Grafik Open")
         df['Date'] = pd.to_datetime(df.Date, format='%d/%m/%y').dt.strftime('%Y-%m-%d')
-        df['Type'] = "Data"
+        df['Type'] = "Data Historis"
         predictiondt["Type"] = "Decision Tree"
         predictiondt = [df,predictiondt]
         predictiondt = pd.concat(predictiondt)
