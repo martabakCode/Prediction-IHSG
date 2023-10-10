@@ -24,6 +24,9 @@ from web_functions import train_model_RF
 # memanggil dataset
 df,x,y = load_data()
 
+#Menu Bar
+
+
 # Judul dari tab kanan
 st.title("Prediksi Data IHSG")
 
@@ -33,6 +36,8 @@ last_row = df.tail(5)
 result = pd.concat([first_row,last_row])
 st.header("Tabel dataset (5 Data Teratas&Terbawah)")
 st.table(result)
+
+
 
 
 
