@@ -2,8 +2,8 @@
 import streamlit as st
 
 st.markdown("# Sistem Informasi Prediksi Harga IHSG berbasis Machine Learning")
-st.subheader("Sistem Informasi ini dapat digunakan untuk membandingkan prediksi harga IHSG menggunakan beberapa algoritma machine learning, yaitu kNN, Regresi Linear,Random Forest dan Decision Tree")
-st.subheader("Pengembangan sistem informasi ini didukung oleh penelitian dengan pendanaan dari Hibah Internal Semester Genap 2022-2023 di Universitas Dian Nuswantoro.")
+st.caption("Sistem Informasi ini dapat digunakan untuk membandingkan prediksi harga IHSG menggunakan beberapa algoritma machine learning, yaitu kNN, Regresi Linear,Random Forest dan Decision Tree")
+st.caption("Pengembangan sistem informasi ini didukung oleh penelitian dengan pendanaan dari Hibah Internal Semester Genap 2022-2023 di Universitas Dian Nuswantoro.")
 
 st.caption('Tim Peneliti:')
 st.caption('1. Dr. Ir. Dwi Eko Waluyo, MM (NIDN: 0630106502)')
