@@ -12,3 +12,11 @@ st.caption('3. Dewi Pergiwati, M.Kom (NIDN: 0608029401)')
 st.caption('4. Cinantya Paramita, M.Eng (NIDN: 0613128902)')
 st.caption('5. Fauzi Adi Rafrastara, M.CS (NIDN: 0630048802)') 
 st.caption('6. Rajendra Nohan (NIM: A11.2021.13301)')
+
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
