@@ -4,3 +4,4 @@ seaborn==0.12.2
 matplotlib==3.7.1
 pandas==2.0.2
 scikit-learn==1.2.2
+pathlib==1.0.1
