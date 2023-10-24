@@ -1,6 +1,6 @@
 import streamlit as st
 import os.path
-
+import pathlib
 st.markdown("# Upload Dataset")
 st.caption("*Jika anda tidak mengupload dataset baru, maka dataset yang akan digunakan adalah existing dataset (dataset yang telah tersedia), yaitu dataset IHSG yang di ambil pada rentang waktu 2 Maret 2020 - 29 Agustus 2023.")
 
