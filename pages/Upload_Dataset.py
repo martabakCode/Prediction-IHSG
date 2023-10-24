@@ -21,7 +21,7 @@ def upload():
         st.session_state["upload_state"] = "Upload file terlebih dahulu"
     else:
         data = uploaded_file.getvalue().decode('utf-8')
-        parent_path = pathlib.Path(__file__).parent.parent.resolve()           
+        parent_path = pathlib.Path(__file__).parent.parent.parent.resolve()           
         save_path = os.path.join(parent_path, "prediction-ihsg")
         complete_name = os.path.join(save_path, uploaded_file.name)
         destination_file = open(complete_name, "w")
