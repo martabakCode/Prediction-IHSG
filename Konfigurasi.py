@@ -39,11 +39,6 @@ st.header("Tabel dataset (5 Data Teratas & Terbawah)")
 st.table(result)
 
 
-
-
-
-
-
 #membuat sidebar title
 st.sidebar.title("Konfigurasi")
 st.sidebar.write('Pilih Algoritma yang akan kamu pakai:')
