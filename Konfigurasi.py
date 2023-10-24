@@ -32,7 +32,7 @@ st.title("Prediksi Data IHSG")
 
 # Menampilkan 5 Data Teratas dan Terbawah
 first_row = df.head(5)
-separator = pd.DataFrame({'Date': '...','Open' : '...', 'Close':'...'})
+separator = pd.DataFrame({'Date': ['...'],'Open' : ['...'], 'Close':['...']})
 last_row = df.tail(5)
 result = pd.concat([first_row,separator,last_row])
 st.header("Tabel dataset (5 Data Teratas & Terbawah)")
