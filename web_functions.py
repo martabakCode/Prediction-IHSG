@@ -98,10 +98,7 @@ def predict_KNN(x, y, features,day, tanggal):
 
 def train_model_LR(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
-    # membuat model Decision Tree
     linier_model = LinearRegression()
-
-    # melakukan pelatihan model terhadap data
     linier_model = linier_model.fit(X_train, y_train)
 
 
@@ -132,10 +129,7 @@ def predict_LR(x, y, features, day, tanggal):
 
 def train_model_RF(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
-    # membuat model Decision Tree
     rfr = RandomForestRegressor(n_estimators=100)
-
-    # melakukan pelatihan model terhadap data
     rfr_model = rfr.fit(X_train, y_train)
 
 
