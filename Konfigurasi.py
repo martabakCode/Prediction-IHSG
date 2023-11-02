@@ -1,45 +1,25 @@
-#import library yang dibutuhkan
-
+# Import library yang dibutuhkan
 import streamlit as st
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pathlib
-import os.path
 import pandas as pd
 import datetime
 import altair as alt
-import numpy as np
-from sklearn import tree
-from csv import writer
-from web_functions import load_data
-from web_functions import predict_KNN
-from web_functions import predict_DT
-from web_functions import predict_LR
-from web_functions import predict_RF
-from web_functions import train_model_KNN
-from web_functions import train_model_DT
-from web_functions import train_model_LR
-from web_functions import train_model_RF
+from web_functions import load_data, predict_KNN, predict_DT, predict_LR, predict_RF, train_model_KNN, train_model_DT, train_model_LR, train_model_RF
 
-# memanggil dataset
-df,x,y = load_data()
+# Memanggil dataset
+df, x, y = load_data()
 
-#Menu Bar
-
-
-# Judul dari tab kanan
+# Menampilkan judul aplikasi
 st.title("Prediksi Data IHSG")
 
-# Menampilkan 5 Data Teratas dan Terbawah
+# Menampilkan 5 data teratas dan terbawah dari dataset
 first_row = df.head(5)
-separator = pd.DataFrame({'Date': ['...'],'Open' : ['...'], 'Close':['...']})
+separator = pd.DataFrame({'Date': ['...'], 'Open': ['...'], 'Close': ['...']})
 last_row = df.tail(5)
-result = pd.concat([first_row,separator,last_row])
+result = pd.concat([first_row, separator, last_row])
 st.header("Tabel dataset (5 Data Teratas & Terbawah)")
 st.table(result)
 
-
-#membuat sidebar title
+# Membuat sidebar untuk konfigurasi
 st.sidebar.title("Konfigurasi")
 st.sidebar.write('Pilih Algoritma yang akan kamu pakai:')
 knn = st.sidebar.checkbox('KNN')
@@ -47,25 +27,29 @@ lr = st.sidebar.checkbox('Linear Regression')
 rf = st.sidebar.checkbox('Random Forest')
 dt = st.sidebar.checkbox('Decision Tree')
 
+# Memilih tanggal akhir prediksi
 tanggal = str(df.Date.tail(1))
 tanggal = tanggal.split()
 tanggal = tanggal[1].split("/")
-
 hari = int(tanggal[0])
 bulan = int(tanggal[1])
-tahun = int('20'+tanggal[2])
+tahun = int('20' + tanggal[2])
 date = st.sidebar.date_input(
     "Tanggal Akhir Prediksi",
-    datetime.date(tahun, bulan, hari)+ datetime.timedelta(days=1),
+    datetime.date(tahun, bulan, hari) + datetime.timedelta(days=1),
     min_value=datetime.date(tahun, bulan, hari)
 )
 date_def = datetime.date(tahun, bulan, hari)
-day = (date-date_def).days
+day = (date - date_def).days
 
 features = [y.iloc[-1]]
-#Tombol Prediksi
+
+# Tombol untuk prediksi
 button = st.sidebar.button("Prediksi")
-tab1, tab2, tab3, tab4 = st.tabs(["KNN", "Linier Regresion","Random Forest","Decision Tree"])
+
+# Membuat tab untuk hasil prediksi
+tab1, tab2, tab3, tab4 = st.tabs(["KNN", "Linier Regresion", "Random Forest", "Decision Tree"])
+
 if button:
     if knn:
         with tab1:
@@ -100,9 +84,10 @@ if button:
         with tab4:
             st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Decision Tree silahkan beri tanda check pada menu konfigurasi")
 
+# Jika tombol prediksi ditekan, tampilkan grafik pembukaan harga
 if button:
     st.subheader("Grafik Pembukaan Harga")
-    st.caption("Untuk menampilkan grafik prediksi pembukaan harga silahkan beri tanda check pada algoritma KNN, Linier Regresion, Random Forest dan Decision Tree pada menu konfigurasi")
+    st.caption("Untuk menampilkan grafik prediksi pembukaan harga, beri tanda check pada algoritma KNN, Linier Regresion, Random Forest, dan Decision Tree pada menu konfigurasi.")
     if dt and rf and lr and knn:
         df['Date'] = pd.to_datetime(df.Date, format='%d/%m/%y').dt.strftime('%Y-%m-%d')
         df['Type'] = "Data Historis"
@@ -142,4 +127,3 @@ if button:
         )
 
         st.altair_chart(c, use_container_width=True)
-
