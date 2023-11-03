@@ -34,7 +34,7 @@ def train_model_DT(X, y):
     return tree_model
 
 # Fungsi untuk memprediksi data dengan model Regresi Pohon Keputusan
-def predict_DT(x, y, features, day, tanggal):
+def predict_decision_tree(x, y, features, day, tanggal):
     tree_model = train_model_DT(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
@@ -63,7 +63,7 @@ def train_model_KNN(X, y):
     return knn
 
 # Fungsi untuk memprediksi data dengan model Regresi K-Nearest Neighbors
-def predict_KNN(x, y, features, day, tanggal):
+def predict_knn(x, y, features, day, tanggal):
     knn = train_model_KNN(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
@@ -92,7 +92,7 @@ def train_model_LR(X, y):
     return linier_model
 
 # Fungsi untuk memprediksi data dengan model Regresi Linier
-def predict_LR(x, y, features, day, tanggal):
+def predict_linear_regression(x, y, features, day, tanggal):
     lr = train_model_LR(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
@@ -121,7 +121,7 @@ def train_model_RF(X, y):
     return rfr_model
 
 # Fungsi untuk memprediksi data dengan model Regresi Hutan Acak
-def predict_RF(x, y, features, day, tanggal):
+def predict_random_forest(x, y, features, day, tanggal):
     rf = train_model_RF(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])

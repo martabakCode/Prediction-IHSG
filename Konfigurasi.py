@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 import altair as alt
-from web_functions import load_data, predict_KNN, predict_DT, predict_LR, predict_RF, train_model_KNN, train_model_DT, train_model_LR, train_model_RF
+from web_functions import load_data, predict_knn, predict_decision_tree, predict_linear_regression, predict_random_forest, train_model_KNN, train_model_DT, train_model_LR, train_model_RF
 
 # Memanggil dataset
 df, x, y = load_data()
@@ -22,10 +22,9 @@ st.table(result)
 # Membuat sidebar untuk konfigurasi
 st.sidebar.title("Konfigurasi")
 st.sidebar.write('Pilih Algoritma yang akan kamu pakai:')
-knn = st.sidebar.checkbox('KNN')
-lr = st.sidebar.checkbox('Linear Regression')
-rf = st.sidebar.checkbox('Random Forest')
-dt = st.sidebar.checkbox('Decision Tree')
+algorithms = ['KNN', 'Linear Regression', 'Random Forest', 'Decision Tree']
+chosen_algorithms = [st.sidebar.checkbox(algo) for algo in algorithms]
+
 
 # Memilih tanggal akhir prediksi
 tanggal = str(df.Date.tail(1))
@@ -48,82 +47,37 @@ features = [y.iloc[-1]]
 button = st.sidebar.button("Prediksi")
 
 # Membuat tab untuk hasil prediksi
-tab1, tab2, tab3, tab4 = st.tabs(["KNN", "Linier Regresion", "Random Forest", "Decision Tree"])
+tabs = st.tabs(["KNN", "Linear Regression", "Random Forest", "Decision Tree"])
 
 if button:
-    if knn:
-        with tab1:
-            predictionknn = predict_KNN(x,y,features,day,tanggal)
-            st.subheader("Tabel Hasil KNN")
-            st.table(predictionknn)
-    else:
-        with tab1:
-            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma KNN silahkan beri tanda check algoritma KNN pada menu konfigurasi")
-    if lr:
-        with tab2:
-            predictionlr = predict_LR(x,y,features,day,tanggal)
-            st.subheader("Tabel Hasil Linier Regresion")
-            st.table(predictionlr)
-    else:
-        with tab2:
-            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Linier Regresion silahkan beri tanda check algoritma Linier Regresion pada menu konfigurasi")
-    if rf:
-        with tab3:
-            predictionrf = predict_RF(x,y,features,day,tanggal)
-            st.subheader("Tabel Hasil Random Forest")
-            st.table(predictionrf)
-    else:
-        with tab3:
-            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Random Forest silahkan beri tanda check algoritma Random Forest pada menu konfigurasi")
-    if dt:
-        with tab4:
-            predictiondt = predict_DT(x,y,features,day,tanggal)
-            st.subheader("Tabel Hasil Decision Tree")
-            st.table(predictiondt)
-    else:
-        with tab4:
-            st.caption("Untuk menampilkan hasil prediksi menggunakan algoritma Decision Tree silahkan beri tanda check pada menu konfigurasi")
-
+    for algo, tab in zip(algorithms, tabs):
+        if chosen_algorithms[algorithms.index(algo)]:
+            with tab:
+                prediction = globals()[f'predict_{algo.replace(" ", "_")}'.lower()](x, y, [y.iloc[-1]], day,tanggal)
+                st.subheader(f"Tabel Hasil {algo}")
+                st.table(prediction)
+        else:
+            with tab:
+                st.caption(f"Untuk menampilkan hasil prediksi menggunakan algoritma {algo} silahkan beri tanda check algoritma {algo} pada menu konfigurasi")
+    
 # Jika tombol prediksi ditekan, tampilkan grafik pembukaan harga
 if button:
     st.subheader("Grafik Pembukaan Harga")
     st.caption("Untuk menampilkan grafik prediksi pembukaan harga, beri tanda check pada algoritma KNN, Linier Regresion, Random Forest, dan Decision Tree pada menu konfigurasi.")
-    if dt and rf and lr and knn:
-        df['Date'] = pd.to_datetime(df.Date, format='%d/%m/%y').dt.strftime('%Y-%m-%d')
-        df['Type'] = "Data Historis"
-        predictiondt["Type"] = "Decision Tree"
-        predictiondt = [df,predictiondt]
-        predictiondt = pd.concat(predictiondt)
-        predictiondt['Date'] = pd.to_datetime(predictiondt.Date, format='%Y-%m-%d')
-        predictiondt = predictiondt.sort_values(by=['Date'])
+    
+    selected_predictions = []
+    selected_algorithms = []
 
-        df['Date'] = df.Date
-        predictionrf["Type"] = "Random Forest"
-        predictionrf = [df,predictionrf]
-        predictionrf = pd.concat(predictionrf)
-        predictionrf['Date'] = pd.to_datetime(predictionrf.Date, format='%Y-%m-%d')
-        predictionrf = predictionrf.sort_values(by=['Date'])
+    for algo in algorithms:
+        if chosen_algorithms[algorithms.index(algo)]:
+            st.write()
+            prediction = globals()[f'predict_{algo.replace(" ", "_")}'.lower()](x, y, [y.iloc[-1]], day, tanggal)
+            selected_predictions.append(prediction)
+            selected_algorithms.append(algo)
 
-        df['Date'] = df.Date
-        predictionlr["Type"] = "Linier Regresion"
-        predictionlr = [df,predictionlr]
-        predictionlr = pd.concat(predictionlr)
-        predictionlr['Date'] = pd.to_datetime(predictionlr.Date, format='%Y-%m-%d')
-        predictionlr = predictionlr.sort_values(by=['Date'])
-
-        df['Date'] = df.Date
-        predictionknn["Type"] = "KNN"
-        predictionknn = [df,predictionknn]
-        predictionknn = pd.concat(predictionknn)
-        predictionknn['Date'] = pd.to_datetime(predictionknn.Date, format='%Y-%m-%d')
-        predictionknn = predictionknn.sort_values(by=['Date'])
-
-        dataclose = pd.concat([predictionrf, predictiondt, predictionlr, predictionknn])
-        c = (
-        alt.Chart(dataclose)
-        .mark_trail()
-        .encode(x="Date:T", y="Open", size="Type", color="Type", tooltip=["Date", "Open", "Type"])
-        .interactive()
-        )
-
+    if selected_predictions:
+        data = pd.concat([df.assign(Type="Data Historis")] + [prediction.assign(Type=algo) for algo, prediction in zip(selected_algorithms, selected_predictions)])
+        data['Date'] = pd.to_datetime(data.Date, format='%d/%m/%y').dt.strftime('%Y-%m-%d')
+        c = alt.Chart(data).mark_trail().encode(x="Date:T", y="Open", size="Type", color="Type", tooltip=["Date", "Open", "Type"]).interactive()
         st.altair_chart(c, use_container_width=True)
+        
