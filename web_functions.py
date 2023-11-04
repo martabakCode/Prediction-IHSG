@@ -141,12 +141,3 @@ def predict_random_forest(x, y, features, day, tanggal):
             closed.append(rf.predict(np.array(closed[i-1],dtype=np.float64).reshape(1,-1))[0])
     predict = pd.DataFrame({'Date': date, 'Open': opened, 'Close': closed})
     return predict
-
-# CSS untuk menyembunyikan elemen UI default Streamlit
-hide_streamlit_style = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-</style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
