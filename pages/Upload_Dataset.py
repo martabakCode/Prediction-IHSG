@@ -13,18 +13,14 @@ st.caption("*Jika anda tidak mengupload dataset baru, maka dataset yang akan dig
 st.header("Dataset Upload")
 
 # Menyediakan opsi untuk mengunggah dataset
-uploaded_file = st.file_uploader("Pilih dataset csv dengan format penamaan : dataset.csv")
+uploaded_file = st.file_uploader("Pilih dataset csv dengan format penamaan : dataset.csv", type=['csv'])
 
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
-    bytes_data_check = uploaded_file.read()
-    if bytes_data_check is not "csv" or "xls" or "xlsx":
-       st.session_state["preview"] = bytes_data_check
-    else:
-        data = uploaded_file.getvalue().decode('utf-8').splitlines()
-        st.session_state["preview"] = ''
-        for i in range(0, min(5, len(data))):
-            st.session_state["preview"] += data[i]
+    data = uploaded_file.getvalue().decode('utf-8').splitlines()
+    st.session_state["preview"] = ''
+    for i in range(0, min(5, len(data))):
+        st.session_state["preview"] += data[i]
 
 # Menampilkan pratinjau CSV
 preview = st.text_area("CSV Preview", "", height=150, key="preview")
