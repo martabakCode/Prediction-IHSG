@@ -17,10 +17,13 @@ uploaded_file = st.file_uploader("Pilih dataset csv dengan format penamaan : dat
 
 if uploaded_file is not None:
     bytes_data = uploaded_file.getvalue()
-    data = uploaded_file.getvalue().decode('utf-8').splitlines()
-    st.session_state["preview"] = ''
-    for i in range(0, min(5, len(data))):
-        st.session_state["preview"] += data[i]
+    if (uploaded_file.name == 'dataset.csv'):
+        data = uploaded_file.getvalue().decode('utf-8').splitlines()
+        st.session_state["preview"] = ''
+        for i in range(0, min(5, len(data))):
+            st.session_state["preview"] += data[i]
+    else :
+        st.error("Format penamaan salah")
 
 # Menampilkan pratinjau CSV
 preview = st.text_area("CSV Preview", "", height=150, key="preview")
@@ -32,7 +35,7 @@ upload_state = st.text_area("Pesan Upload", "", key="upload_state")
 def upload():
     if uploaded_file is None:
         st.session_state["upload_state"] = "Upload file terlebih dahulu"
-    else:
+    elif (uploaded_file.name == 'dataset.csv'):
         data = uploaded_file.getvalue().decode('utf-8')
         parent_path = pathlib.Path(__file__).parent.parent.parent.resolve()
         save_path = os.path.join(parent_path, "prediction-ihsg")
@@ -41,6 +44,8 @@ def upload():
         destination_file.write(data)
         destination_file.close()
         st.session_state["upload_state"] = "Penyimpanan " + complete_name + " berhasil!"
+    else : 
+        st.error("Cek terlebih dahulu pesan sebelumnya karena terdapat error")
 
 # Tombol untuk memicu fungsi upload
 st.button("Upload dataset", on_click=upload)
