@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
 import streamlit as st
 
 # Fungsi untuk memuat dataset dari file CSV
@@ -24,18 +25,20 @@ def load_data():
     return df, x, y
 
 # Fungsi untuk melatih model Regresi Pohon Keputusan
-def train_model_DT(X, y):
+def train_model_decision_tree(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     # Membuat model Decision Tree
     tree_model = DecisionTreeRegressor()
     # Melatih model terhadap data
     tree_model = tree_model.fit(X_train, y_train)
     y_pred = tree_model.predict(X_test)
-    return tree_model
+    score = tree_model.score(X_test, y_test)
+    rms = np.sqrt(mean_squared_error(y_test, y_pred))
+    return tree_model,score,rms
 
 # Fungsi untuk memprediksi data dengan model Regresi Pohon Keputusan
 def predict_decision_tree(x, y, features, day, tanggal):
-    tree_model = train_model_DT(x, y)
+    tree_model,score,rms = train_model_decision_tree(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
     tahun = int('20'+tanggal[2])
@@ -56,15 +59,18 @@ def predict_decision_tree(x, y, features, day, tanggal):
     return predict
 
 # Fungsi untuk melatih model Regresi K-Nearest Neighbors
-def train_model_KNN(X, y):
+def train_model_knn(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     knn = KNeighborsRegressor(n_neighbors=2)
     knn = knn.fit(X_train, y_train)
-    return knn
+    y_pred = knn.predict(X_test)
+    score = knn.score(X_test, y_test)
+    rms = np.sqrt(mean_squared_error(y_test, y_pred))
+    return knn,score,rms
 
 # Fungsi untuk memprediksi data dengan model Regresi K-Nearest Neighbors
 def predict_knn(x, y, features, day, tanggal):
-    knn = train_model_KNN(x, y)
+    knn,score,rms = train_model_knn(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
     tahun = int('20'+tanggal[2])
@@ -85,15 +91,18 @@ def predict_knn(x, y, features, day, tanggal):
     return predict
 
 # Fungsi untuk melatih model Regresi Linier
-def train_model_LR(X, y):
+def train_model_linear_regression(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     linier_model = LinearRegression()
     linier_model = linier_model.fit(X_train, y_train)
-    return linier_model
+    y_pred = linier_model.predict(X_test)
+    score = linier_model.score(X_test, y_test)
+    rms = np.sqrt(mean_squared_error(y_test, y_pred))
+    return linier_model,score,rms
 
 # Fungsi untuk memprediksi data dengan model Regresi Linier
 def predict_linear_regression(x, y, features, day, tanggal):
-    lr = train_model_LR(x, y)
+    lr,score,rms = train_model_linear_regression(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
     tahun = int('20'+tanggal[2])
@@ -114,15 +123,18 @@ def predict_linear_regression(x, y, features, day, tanggal):
     return predict
 
 # Fungsi untuk melatih model Regresi Hutan Acak
-def train_model_RF(X, y):
+def train_model_random_forest(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=49)
     rfr = RandomForestRegressor(n_estimators=100)
     rfr_model = rfr.fit(X_train, y_train)
-    return rfr_model
+    y_pred = rfr_model.predict(X_test)
+    score = rfr_model.score(X_test, y_test)
+    rms = np.sqrt(mean_squared_error(y_test, y_pred))
+    return rfr_model,score,rms
 
 # Fungsi untuk memprediksi data dengan model Regresi Hutan Acak
 def predict_random_forest(x, y, features, day, tanggal):
-    rf = train_model_RF(x, y)
+    rf,score,rms = train_model_random_forest(x, y)
     hari = int(tanggal[0])
     bulan = int(tanggal[1])
     tahun = int('20'+tanggal[2])

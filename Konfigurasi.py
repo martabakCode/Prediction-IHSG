@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import datetime
 import altair as alt
-from web_functions import load_data, predict_knn, predict_decision_tree, predict_linear_regression, predict_random_forest, train_model_KNN, train_model_DT, train_model_LR, train_model_RF
+from web_functions import load_data, predict_knn, predict_decision_tree, predict_linear_regression, predict_random_forest, train_model_knn, train_model_decision_tree, train_model_linear_regression, train_model_random_forest
 
 # Memanggil dataset
 df, x, y = load_data()
@@ -54,8 +54,12 @@ if button:
         if chosen_algorithms[algorithms.index(algo)]:
             with tab:
                 prediction = globals()[f'predict_{algo.replace(" ", "_")}'.lower()](x, y, [y.iloc[-1]], day,tanggal)
+                model,score,rms = globals()[f'train_model_{algo.replace(" ", "_")}'.lower()](x, y)
                 st.subheader(f"Tabel Hasil {algo}")
                 st.table(prediction)
+                st.caption("Akurasi algoritma adalah :"+str(score))
+                st.caption("RMS : "+str(rms))
+                
         else:
             with tab:
                 st.caption(f"Untuk menampilkan hasil prediksi menggunakan algoritma {algo} silahkan beri tanda check algoritma {algo} pada menu konfigurasi")
